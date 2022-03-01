@@ -1,0 +1,9 @@
+start_new_game:
+  path: /v1/new-game
+  controller: TicTacToe\Play\Infrastructure\Communication\Http\Symfony\Controller\PlayController::startNewGame
+  methods: POST
+
+make_the_move:
+  path: /v1/move
+  controller: TicTacToe\Play\Infrastructure\Communication\Http\Symfony\Controller\PlayController::makeTheMove
+  methods: POST

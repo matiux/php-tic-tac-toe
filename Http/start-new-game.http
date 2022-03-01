@@ -1,0 +1,2 @@
+POST {{protocol}}{{server}}{{port}}/v1/new-game
+Content-Type: application/json

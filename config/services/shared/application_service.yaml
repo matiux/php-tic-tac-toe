@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  TicTacToe\Shared\Application\Service\:
+    resource: '%kernel.project_dir%/src/TicTacToe/Shared/Application/Service/*'
+    exclude:  '%kernel.project_dir%/src/TicTacToe/Shared/Application/Service/**/{*Request.php,*Exception.php}'
+
+#  TicTacToe\Shared\Application\Service\Clock\Clock:
+#    alias: TicTacToe\Shared\Application\Service\Clock\SystemClock

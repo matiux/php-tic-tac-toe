@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  TicTacToe\Play\Application\Service\:
+    resource: '%kernel.project_dir%/src/TicTacToe/Play/Application/Service/*'
+    exclude:  '%kernel.project_dir%/src/TicTacToe/Play/Application/Service/**/{*Request.php,*Exception.php}'

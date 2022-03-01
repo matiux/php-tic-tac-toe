@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  TicTacToe\Play\Domain\Aggregate\Matches:
+    class: TicTacToe\Play\Infrastructure\Domain\Doctrine\Aggregate\DoctrineMatches
+    arguments:
+      - '@doctrine'
+      - 'TicTacToe\Play\Domain\Aggregate\Play'
