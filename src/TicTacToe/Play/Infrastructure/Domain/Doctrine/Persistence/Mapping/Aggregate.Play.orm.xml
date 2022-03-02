@@ -9,6 +9,8 @@
         <field name="startDate" type="datetime_immutable" column="start_date" nullable="false"/>
         <field name="board" type="array" column="board" nullable="false"/>
         <field name="lastPlayer" type="string" column="last_player" nullable="false"/>
+        <field name="winning" type="boolean" column="winning" nullable="false"/>
+        <field name="winningCombination" type="array" column="winning_combination" nullable="false"/>
 
     </entity>
 </doctrine-mapping>

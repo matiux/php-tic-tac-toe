@@ -4,49 +4,44 @@ declare(strict_types=1);
 
 namespace TicTacToe\Play\Application\Service;
 
+use DDDStarterPack\DataTransformer\Application\Type\ItemDataTransformer;
 use DDDStarterPack\Service\Application\ApplicationService;
-use InvalidArgumentException;
 use TicTacToe\Play\Domain\Aggregate\Matches;
-use TicTacToe\Play\Domain\Aggregate\Play;
 use TicTacToe\Play\Domain\Aggregate\PlayId;
+use TicTacToe\Play\Domain\Exception\InvalidCelPositionException;
 use TicTacToe\Play\Domain\Exception\InvalidPlayerException;
 use TicTacToe\Play\Domain\Exception\NotEmptyCelException;
 
 /**
- * @implements ApplicationService<MakeTheMoveRequest, MakeTheMoveResponse>
+ * @implements ApplicationService<MakeTheMoveRequest, PlayResponse>
  */
-class MakeTheMove implements ApplicationService
+class MakeTheMove extends PlayService implements ApplicationService
 {
     public function __construct(
-        private Matches $matches
+        Matches $matches,
+        private ItemDataTransformer $dataTransformer,
     ) {
+        parent::__construct($matches);
     }
 
     /**
      * @param MakeTheMoveRequest $makeTheMoveRequest
      *
-     * @throws InvalidPlayerException
-     * @throws NotEmptyCelException
+     * @throws InvalidCelPositionException|InvalidPlayerException|NotEmptyCelException
      *
-     * @return MakeTheMoveResponse
+     * @return PlayResponse
      */
-    public function execute($makeTheMoveRequest): MakeTheMoveResponse
+    public function execute($makeTheMoveRequest): PlayResponse
     {
         $play = $this->loadPlayOrFail(PlayId::createFrom($makeTheMoveRequest->playId));
 
-        $play->move($makeTheMoveRequest->player, $makeTheMoveRequest->bordCellNumber);
+        $matchStatus = $play->move($makeTheMoveRequest->player, $makeTheMoveRequest->bordCellNumber);
 
         $this->matches->update($play);
+        $r = $this->dataTransformer->write($matchStatus)->read();
 
-        return MakeTheMoveResponse::success($play->board());
-    }
-
-    private function loadPlayOrFail(PlayId $playId): Play
-    {
-        if (!$play = $this->matches->withId($playId)) {
-            throw new InvalidArgumentException();
-        }
-
-        return $play;
+        return PlayResponse::success(
+            $r
+        );
     }
 }

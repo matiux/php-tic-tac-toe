@@ -6,4 +6,12 @@ services:
 
   TicTacToe\Play\Application\Service\:
     resource: '%kernel.project_dir%/src/TicTacToe/Play/Application/Service/*'
-    exclude:  '%kernel.project_dir%/src/TicTacToe/Play/Application/Service/**/{*Request.php,*Exception.php}'
+    exclude:  '%kernel.project_dir%/src/TicTacToe/Play/Application/Service/**/{*Request.php,*Exception.php,MakeTheMove.php,ShowPlayStatus.php}'
+
+  TicTacToe\Play\Application\Service\MakeTheMove:
+    arguments:
+      $dataTransformer: '@TicTacToe\Play\Application\DataTransformer\MatchStatusToArrayDataTransformer'
+
+  TicTacToe\Play\Application\Service\ShowPlayStatus:
+    arguments:
+      $dataTransformer: '@TicTacToe\Play\Application\DataTransformer\MatchStatusToArrayDataTransformer'

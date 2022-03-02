@@ -6,7 +6,11 @@ namespace TicTacToe\Play\Application\Service;
 
 use DDDStarterPack\Service\Application\Response\BasicApplicationServiceResponse;
 
-class MakeTheMoveResponse extends BasicApplicationServiceResponse
+/**
+ * @template T of mixed
+ * @extends BasicApplicationServiceResponse<T>
+ */
+class PlayResponse extends BasicApplicationServiceResponse
 {
     protected function errorCode(): int
     {

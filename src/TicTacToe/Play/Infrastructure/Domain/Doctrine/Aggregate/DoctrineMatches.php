@@ -30,13 +30,16 @@ class DoctrineMatches extends DoctrineRepository implements Matches
 
     public function withId(PlayId $playId): null|Play
     {
-        return $this->em->createQueryBuilder()
+        /** @var null|Play $play */
+        $play = $this->em->createQueryBuilder()
             ->select($this->getEntityAliasName())
             ->from($this->getEntityClassName(), $this->getEntityAliasName())
             ->where(sprintf('%s.playId = :playId', $this->getEntityAliasName()))
             ->setParameter('playId', $playId, PDO::PARAM_STR)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $play;
     }
 
     public function update(Play $aPlay): void

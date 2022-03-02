@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use TicTacToe\Play\Application\Service\MakeTheMove;
 use TicTacToe\Play\Application\Service\MakeTheMoveRequest;
+use TicTacToe\Play\Application\Service\ShowPlayStatus;
 use TicTacToe\Play\Application\Service\StartNewGame;
 
 class PlayController
@@ -35,12 +36,12 @@ class PlayController
 
     public function makeTheMove(Request $request, MakeTheMove $makeTheMove): Response
     {
-        $content = json_decode($request->getContent(), true);
+        $content = (array) json_decode((string) $request->getContent(), true);
 
         $request = MakeTheMoveRequest::create(
-            playId: $content['play_id'],
-            player: $content['player'],
-            bordCellNumber: $content['position'],
+            playId: (string) $content['play_id'],
+            player: (string) $content['player'],
+            bordCellNumber: (int) $content['position'],
         );
 
         return $this->executeService(
@@ -49,6 +50,19 @@ class PlayController
         );
     }
 
+    public function showPlayStatus(string $playId, ShowPlayStatus $showPlayStatus): Response
+    {
+        return $this->executeService(service: $showPlayStatus, request: $playId);
+    }
+
+    /**
+     * @param Service    $service
+     * @param null|mixed $request
+     * @param int        $successfulStatus
+     * @param string[]   $contextPath
+     *
+     * @return JsonResponse
+     */
     private function executeService(Service $service, mixed $request = null, int $successfulStatus = 200, array $contextPath = []): JsonResponse
     {
         try {
@@ -75,17 +89,17 @@ class PlayController
         $body = null;
         $headers = [];
 
-        if (!$serviceResponse->isSuccess()) {
-            $status = 500;
-            $body = [
-                'success' => false,
-                'message' => (string) $serviceResponse->body(),
-            ];
-
-            return new JsonResponse(json_encode($body), $status, $headers, true);
-        }
-
         if ($serviceResponse instanceof ServiceResponse) {
+            if (!$serviceResponse->isSuccess()) {
+                $status = 500;
+                $body = [
+                    'success' => false,
+                    'message' => (string) $serviceResponse->body(),
+                ];
+
+                return new JsonResponse(json_encode($body), $status, $headers, true);
+            }
+
             if ($serviceResponse->body() instanceof EntityId) {
                 $body = ['id' => (string) $serviceResponse->body()];
                 $headers = $this->prepareHeaders($contextPath, $body['id']);

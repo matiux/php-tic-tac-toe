@@ -7,3 +7,10 @@ make_the_move:
   path: /v1/move
   controller: TicTacToe\Play\Infrastructure\Communication\Http\Symfony\Controller\PlayController::makeTheMove
   methods: POST
+
+show_play_status:
+  path: /v1/{playId}
+  controller: TicTacToe\Play\Infrastructure\Communication\Http\Symfony\Controller\PlayController::showPlayStatus
+  methods: GET
+  requirements:
+    playId: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
