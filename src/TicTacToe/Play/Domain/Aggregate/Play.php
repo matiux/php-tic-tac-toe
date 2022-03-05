@@ -232,6 +232,8 @@ class Play
     }
 
     /**
+     * TODO Refactor: extract method.
+     *
      * @return null|int[]
      */
     private function isThereDiagonalWinner(): null|array
@@ -239,7 +241,7 @@ class Play
         $diagonals = [];
 
         /**
-         * \.
+         * Left to right: \.
          */
         for ($col = 0; $col < self::NUM_COLS; ++$col) {
             for ($row = 0; $row < self::NUM_ROWS; ++$row, ++$col) {
@@ -248,7 +250,7 @@ class Play
         }
 
         /**
-         * /
+         * Right to left: /.
          */
         for ($col = 2; $col >= 0; --$col) {
             for ($row = 0; $row < self::NUM_ROWS; ++$row, --$col) {

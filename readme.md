@@ -28,14 +28,14 @@ curl --location --request POST 'localhost:8080/v1/new-game' | jq
 The play ID
 ```json
 {
-  "id": "b2ac2d46-8b9d-469a-abf5-aa839bae912b"
+  "id": "740f31c2-40bd-457f-bcca-390638bfeb66"
 }
 ```
 
 ### Game status
 
 ```shell
-curl --location --request GET 'localhost:8080/v1/b2ac2d46-8b9d-469a-abf5-aa839bae912b' | jq
+curl --location --request GET 'localhost:8080/v1/740f31c2-40bd-457f-bcca-390638bfeb66' | jq
 ```
 #### Response
 
@@ -43,19 +43,19 @@ curl --location --request GET 'localhost:8080/v1/b2ac2d46-8b9d-469a-abf5-aa839ba
 {
   "board": [
     [
-      null,
-      null,
-      null
+      "-",
+      "-",
+      "-"
     ],
     [
-      null,
-      null,
-      null
+      "-",
+      "-",
+      "-"
     ],
     [
-      null,
-      null,
-      null
+      "-",
+      "-",
+      "-"
     ]
   ],
   "winning": false,
@@ -70,7 +70,7 @@ curl --location --request GET 'localhost:8080/v1/b2ac2d46-8b9d-469a-abf5-aa839ba
 curl --location --request POST 'localhost:8080/v1/move' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "play_id": "b2ac2d46-8b9d-469a-abf5-aa839bae912b",
+    "play_id": "740f31c2-40bd-457f-bcca-390638bfeb66",
     "player": "O",
     "position": 8
     }' | jq
@@ -81,18 +81,18 @@ curl --location --request POST 'localhost:8080/v1/move' \
 {
   "board": [
     [
-      null,
-      null,
-      null
+      "-",
+      "-",
+      "-"
     ],
     [
-      null,
-      null,
-      null
+      "-",
+      "-",
+      "-"
     ],
     [
-      null,
-      null,
+      "-",
+      "-",
       "O"
     ]
   ],
