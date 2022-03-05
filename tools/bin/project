@@ -53,20 +53,6 @@ migrate() {
     --env="${APP_RUNTIME_ENV}"
 }
 
-
-coverage_badge() {
-
-  vendor/bin/php-coverage-badger \
-    .coverage/coverage-clover.xml \
-    .coverage/coverage-badge.svg
-
-  inkscape \
-    --export-png=public/coverage-badge.png \
-    --export-dpi=200 \
-    --export-background-opacity=0 \
-    --without-gui .coverage/coverage-badge.svg &>/dev/null
-}
-
 coverage() {
   export XDEBUG_MODE=coverage
 
@@ -77,10 +63,6 @@ coverage() {
   TEST_STATUS=$?
 
   export XDEBUG_MODE=off
-
-  if [[ "$TEST_STATUS" -eq 0 ]]; then
-    coverage_badge
-  fi
 
   return $TEST_STATUS
 }
@@ -118,35 +100,6 @@ deptrac() {
     --graphviz-dump-image=doc/deptrac/"$IMG"
 }
 
-create_badge() {
-
-  #project badge "static analysis" passed psalm
-
-  BADGE_NAME="$1"
-  STATUS="$2"
-  TOOL_NAME="$3"
-  COLOR=$(if [ "$STATUS" == "passed" ]; then echo "green"; else echo "red"; fi)
-
-  rm -f "public/$TOOL_NAME.svg"
-  rm -f "public/$TOOL_NAME.png"
-
-  ./vendor/bin/poser \
-    "$BADGE_NAME" \
-    "$STATUS" \
-    "$COLOR" \
-    -p "public/$TOOL_NAME.svg" \
-    -s plastic \
-    &>/dev/null
-
-  inkscape --export-png="public/$TOOL_NAME.png" \
-    --export-dpi=200 \
-    --export-background-opacity=0 \
-    --without-gui "public/$TOOL_NAME.svg" \
-    &>/dev/null
-
-  rm -f "public/$TOOL_NAME.svg"
-}
-
 while :; do
   case $CMD in
   php_staged_files)
@@ -168,10 +121,6 @@ while :; do
   coverage)
     coverage
     exit $?
-    ;;
-  coverage-badge)
-    coverage_badge
-    break
     ;;
   psalm)
     psalm "$@"
@@ -215,10 +164,6 @@ while :; do
     done
     exit $?
     ;;
-  create-badge)
-    create_badge "$@"
-    break
-    ;;
   shortlist)
     echo \
       php_staged_files \
@@ -226,7 +171,6 @@ while :; do
       setup-dev \
       phpunit \
       coverage \
-      coverage-badge \
       psalm \
       security-analysis \
       coding-standard-fix \
@@ -235,8 +179,7 @@ while :; do
       coding-standard-check-staged \
       coding-standard-check-all \
       deptrac \
-      deptrac-all \
-      create-badge
+      deptrac-all
     break
     ;;
   esac

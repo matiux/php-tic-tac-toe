@@ -20,6 +20,18 @@
     "composer/xdebug-handler": {
         "version": "3.0.3"
     },
+    "dama/doctrine-test-bundle": {
+        "version": "6.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
+        },
+        "files": [
+            "config/packages/test/dama_doctrine_test_bundle.yaml"
+        ]
+    },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
     },
@@ -119,11 +131,17 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.6"
     },
+    "hamcrest/hamcrest-php": {
+        "version": "v2.0.1"
+    },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
     "matiux/ddd-starter-pack": {
         "version": "v3.2.0"
+    },
+    "mockery/mockery": {
+        "version": "1.5.0"
     },
     "netresearch/jsonmapper": {
         "version": "v4.0.0"
@@ -145,6 +163,15 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.6.0"
+    },
+    "psalm/plugin-mockery": {
+        "version": "0.9.1"
+    },
+    "psalm/plugin-phpunit": {
+        "version": "0.16.1"
+    },
+    "psalm/plugin-symfony": {
+        "version": "v3.1.3"
     },
     "psr/cache": {
         "version": "3.0.0"
@@ -255,6 +282,21 @@
     "symfony/options-resolver": {
         "version": "v6.0.3"
     },
+    "symfony/phpunit-bridge": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.3",
+            "ref": "97cb3dc7b0f39c7cfc4b7553504c9d7b7795de96"
+        },
+        "files": [
+            ".env.test",
+            "bin/phpunit",
+            "phpunit.xml.dist",
+            "tests/bootstrap.php"
+        ]
+    },
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.24.0"
     },
@@ -315,5 +357,8 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
+    },
+    "weirdan/doctrine-psalm-plugin": {
+        "version": "v2.3.0"
     }
 }

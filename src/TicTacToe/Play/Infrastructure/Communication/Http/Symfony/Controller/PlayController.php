@@ -36,7 +36,7 @@ class PlayController
 
     public function makeTheMove(Request $request, MakeTheMove $makeTheMove): Response
     {
-        $content = (array) json_decode((string) $request->getContent(), true);
+        $content = (array) json_decode($request->getContent(), true);
 
         $request = MakeTheMoveRequest::create(
             playId: (string) $content['play_id'],

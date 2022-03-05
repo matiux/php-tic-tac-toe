@@ -1,15 +1,15 @@
 PHP Tic Tac Toe REST API
 ======
 
-
+This is a playful project in which I tried to develop the tic-tac-toe game by applying some DDD principles.
+There are certainly various refactoring steps to be applied, some of these indicated by a TODO.
 
 ## Setup project
 ```shell
 git clone https://github.com/matiux/php-tic-tac-toe.git && cd php-tic-tac-toe
 cp docker/docker-compose.override.dist.yml docker/docker-compose.override.yml
-sudo chmod -R 777 docker/data
 ./dc up -d
-./dc composer install
+./dc composer install --no-dev
 ./dc project setup-dev
 ```
 

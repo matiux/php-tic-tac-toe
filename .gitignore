@@ -1,6 +1,5 @@
 ###> Docker ###
 docker/docker-compose.override.yml
-docker/logs/*
 docker/data/shell_history/.x_history
 ###< Docker ###
 

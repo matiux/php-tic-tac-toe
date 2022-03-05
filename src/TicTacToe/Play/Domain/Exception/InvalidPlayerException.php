@@ -8,5 +8,5 @@ use DDDStarterPack\Exception\Domain\DomainException;
 
 class InvalidPlayerException extends DomainException
 {
-    public const MESSAGE = 'Player non valido';
+    public const MESSAGE = 'Questo player ha già mosso';
 }

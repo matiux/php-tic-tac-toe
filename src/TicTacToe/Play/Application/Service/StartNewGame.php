@@ -7,7 +7,7 @@ namespace TicTacToe\Play\Application\Service;
 use DDDStarterPack\Service\Application\NoRequestApplicationService;
 use TicTacToe\Play\Domain\Aggregate\Matches;
 use TicTacToe\Play\Domain\Aggregate\Play;
-use TicTacToe\Shared\Application\Service\Clock\SystemClock;
+use TicTacToe\Shared\Application\Service\Clock\Clock;
 
 /**
  * @implements NoRequestApplicationService<StartNewGameResponse>
@@ -16,7 +16,7 @@ class StartNewGame implements NoRequestApplicationService
 {
     public function __construct(
         private Matches $matches,
-        private SystemClock $systemClock
+        private Clock $systemClock
     ) {
     }
 

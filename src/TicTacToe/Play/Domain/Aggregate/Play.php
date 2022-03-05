@@ -17,7 +17,7 @@ class Play
 
     /** @var string[][] */
     private array $board = [];
-    private string $lastPlayer; // TODO - Value Object con validazione intrinseca
+    private null|Player $lastPlayer;
     private bool $winning = false;
 
     /** @var int[] */
@@ -27,8 +27,8 @@ class Play
         public readonly PlayId $playId,
         private DateTimeImmutable $startDate
     ) {
+        $this->lastPlayer = null;
         $this->initializeBoard();
-        $this->lastPlayer = '';
     }
 
     public static function newMatch(PlayId $playId, DateTimeImmutable $startDate): self
@@ -38,7 +38,15 @@ class Play
 
     private function initializeBoard(): void
     {
-        $this->board = array_fill(
+        $this->board = self::drawEmptyBoard();
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function drawEmptyBoard(): array
+    {
+        return array_fill(
             start_index: 0,
             count: self::NUM_ROWS,
             value: array_fill(
@@ -50,7 +58,7 @@ class Play
     }
 
     /**
-     * @param string $player
+     * @param Player $player
      * @param int    $bordCellNumber
      *
      * @throws InvalidCelPositionException
@@ -59,7 +67,7 @@ class Play
      *
      * @return MatchStatus
      */
-    public function move(string $player, int $bordCellNumber): MatchStatus
+    public function move(Player $player, int $bordCellNumber): MatchStatus
     {
         $this->moveIfNotWinning($player, $bordCellNumber);
 
@@ -67,28 +75,22 @@ class Play
     }
 
     /**
-     * @param string $player
+     * @param Player $player
      * @param int    $bordCellNumber
      *
      * @throws InvalidCelPositionException
      * @throws InvalidPlayerException
      * @throws NotEmptyCelException
      */
-    private function moveIfNotWinning(string $player, int $bordCellNumber): void
+    private function moveIfNotWinning(Player $player, int $bordCellNumber): void
     {
         if ($this->winning) {
             return;
         }
         // TODO - Specification pattern - Introduce Parameter Object - Preserve Whole Object
         $this->isValidCelOrFail($bordCellNumber);
-
-        // TODO - Specification pattern
-        $this->isCellEmptyOrFail(
-            $this->getRowFromCelNumber($bordCellNumber),
-            $this->getColFromCelNumber($bordCellNumber)
-        );
-
-        $this->setLastPlayerOrFail($player);
+        $this->isCellEmptyOrFail($bordCellNumber);
+        $this->setLastPlayerIfValid($player);
         $this->setMoveOnBoard($bordCellNumber);
         $this->setWinningIfWin();
     }
@@ -104,46 +106,38 @@ class Play
     }
 
     /**
-     * @param int $bordCellNumber
+     * @param int $boardCellNumber
      *
      * @throws InvalidCelPositionException
      */
-    private function isValidCelOrFail(int $bordCellNumber): void
+    private function isValidCelOrFail(int $boardCellNumber): void
     {
-        if ($bordCellNumber < 0 || $bordCellNumber >= self::NUM_ROWS * self::NUM_COLS) {
+        if ($boardCellNumber < 0 || $boardCellNumber >= self::NUM_ROWS * self::NUM_COLS) {
             throw new InvalidCelPositionException();
         }
     }
 
     /**
-     * @param int $row
-     * @param int $col
+     * @param int $boardCellNumber
      *
      * @throws NotEmptyCelException
      */
-    private function isCellEmptyOrFail(int $row, int $col): void
+    private function isCellEmptyOrFail(int $boardCellNumber): void
     {
+        $row = self::getRowFromCelNumber($boardCellNumber);
+        $col = self::getColFromCelNumber($boardCellNumber);
+
         if (self::EMPTY_CELL !== $this->board[$row][$col]) {
             throw new NotEmptyCelException();
         }
     }
 
-    private function getRowFromCelNumber(int $bordCellNumber): int
-    {
-        return (int) floor($bordCellNumber / 3);
-    }
-
-    private function getColFromCelNumber(int $bordCellNumber): int
-    {
-        return $bordCellNumber % 3;
-    }
-
     /**
-     * @param string $player
+     * @param Player $player
      *
      * @throws InvalidPlayerException
      */
-    private function setLastPlayerOrFail(string $player): void
+    private function setLastPlayerIfValid(Player $player): void
     {
         if ($player === $this->lastPlayer) {
             throw new InvalidPlayerException();
@@ -152,9 +146,22 @@ class Play
         $this->lastPlayer = $player;
     }
 
-    private function setMoveOnBoard(int $bordCellNumber): void
+    private function setMoveOnBoard(int $boardCellNumber): void
     {
-        $this->board[$this->getRowFromCelNumber($bordCellNumber)][$this->getColFromCelNumber($bordCellNumber)] = $this->lastPlayer;
+        $row = self::getRowFromCelNumber($boardCellNumber);
+        $col = self::getColFromCelNumber($boardCellNumber);
+
+        $this->board[$row][$col] = (string) $this->lastPlayer?->value;
+    }
+
+    public static function getRowFromCelNumber(int $boardCellNumber): int
+    {
+        return (int) floor($boardCellNumber / 3);
+    }
+
+    public static function getColFromCelNumber(int $boardCellNumber): int
+    {
+        return $boardCellNumber % 3;
     }
 
     private function setWinningIfWin(): void
@@ -163,16 +170,6 @@ class Play
             $this->winning = true;
             $this->winningCombination = $winningCombination;
         }
-    }
-
-    private function isGameFinished(): bool
-    {
-        return $this->isBoardFull() || $this->winning;
-    }
-
-    private function isBoardFull(): bool
-    {
-        return !in_array(self::EMPTY_CELL, array_merge(...$this->board()));
     }
 
     /**
@@ -293,10 +290,20 @@ class Play
         return false;
     }
 
+    private function isGameFinished(): bool
+    {
+        return $this->isBoardFull() || $this->winning;
+    }
+
+    private function isBoardFull(): bool
+    {
+        return !in_array(self::EMPTY_CELL, array_merge(...$this->board()));
+    }
+
     /**
      * @return string[][]
      */
-    public function board(): array
+    private function board(): array
     {
         return $this->board;
     }
